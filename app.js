@@ -41,38 +41,49 @@ function appendToTable(book) {
 }
 
 async function lookupISBN(isbn) {
+    const url = `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`;
     try {
-        const response = await fetch('/lookup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ isbn })
-        });
+        const response = await fetch(url);
+        const json = await response.json();
+        const bookData = json[`ISBN:${isbn}`];
 
-        const data = await response.json();
-
-        if (data.error) {
-            alert("Lookup error: " + data.error);
-            return getEmptyBook();
-        } else if (data.not_found) {
+        if (!bookData) {
             alert("Book not found. You may enter data manually.");
-            return getEmptyBook();
+            return {
+                isbn: isbn,
+                title: "",
+                author: "",
+                publisher: "",
+                publish_date: "",
+                lccn: "",
+                notes: ""
+            };
         }
 
         return {
             isbn: isbn,
-            title: data.Title || "",
-            author: data.Author || "",
-            publisher: data.Publisher || "",
-            publish_date: data["Publish Date"] || "",
-            lccn: data.LCCN || "",
+            title: bookData.title || "",
+            author: bookData.authors ? bookData.authors.map(a => a.name).join(", ") : "",
+            publisher: bookData.publishers ? bookData.publishers.map(p => p.name).join(", ") : "",
+            publish_date: bookData.publish_date || "",
+            lccn: (bookData.identifiers?.lccn || []).join(", "),
             notes: ""
         };
     } catch (error) {
-        console.error("Fetch error:", error);
-        alert("An error occurred during lookup.");
-        return getEmptyBook();
+        console.error("Error fetching book data:", error);
+        alert("Network error during lookup.");
+        return {
+            isbn: isbn,
+            title: "",
+            author: "",
+            publisher: "",
+            publish_date: "",
+            lccn: "",
+            notes: ""
+        };
     }
 }
+
 
 function getEmptyBook() {
     return {
