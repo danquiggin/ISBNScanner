@@ -183,36 +183,12 @@ exportBtn.addEventListener("click", () => {
 
     ws['!cols'] = colWidths;
 
-  // Bold header row
-    headers[0].forEach((_, colIdx) => {
-        const cellAddress = XLSX.utils.encode_cell({ r: 0, c: colIdx });
-        if (ws[cellAddress]) {
-            ws[cellAddress].s = {
-                font: { bold: true },
-                fill: {
-                    fgColor: { rgb: "D9E1F2" }  // Light blue-gray shade
-                },
-                alignment: {
-                    horizontal: "center",
-                    vertical: "center"
-                },
-                border: {
-                    top: { style: "thin", color: { rgb: "000000" } },
-                    bottom: { style: "thin", color: { rgb: "000000" } },
-                    left: { style: "thin", color: { rgb: "000000" } },
-                    right: { style: "thin", color: { rgb: "000000" } }
-                        }
-            };
-        }
-    });
-
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Books");
 
     const wbout = XLSX.write(wb, {
         bookType: "xlsx",
         type: "array",
-        cellStyles: true
     });
 
     const blob = new Blob([wbout], { type: "application/octet-stream" });
