@@ -102,6 +102,11 @@ document.addEventListener("keydown", async (event) => {
     event.preventDefault();
 
     const activeElement = document.activeElement;
+    // If form is populated, treat Enter as Save
+    if (fields.title.value.trim() !== "") {
+        saveBtn.click();
+    }
+    });
 
     // If focus is in ISBN input and title field is still empty: do lookup
     if (activeElement === isbnInput && fields.title.value.trim() === "") {
@@ -117,11 +122,7 @@ document.addEventListener("keydown", async (event) => {
         return;
     }
 
-    // If form is populated, treat Enter as Save
-    if (fields.title.value.trim() !== "") {
-        saveBtn.click();
-    }
-});
+
 
 
 lookupBtn.addEventListener("click", async () => {
