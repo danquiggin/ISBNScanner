@@ -97,16 +97,14 @@ function getEmptyBook() {
 }
 
 
-isbnInput.addEventListener("keypress", async (event) => {
-    if (event.key === "Enter") {
-        event.preventDefault();
+document.addEventListener("keydown", async (event) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
 
-        // If a book has already been loaded (Title field is filled), treat Enter as Save
-        if (fields.title.value.trim() !== "") {
-            saveBtn.click();
-            return;
-        }
+    const activeElement = document.activeElement;
 
+    // If focus is in ISBN input and title field is still empty: do lookup
+    if (activeElement === isbnInput && fields.title.value.trim() === "") {
         const isbn = isbnInput.value.trim();
         if (!isbn.match(/^\d{10,13}$/)) {
             alert("Please enter a 10- or 13-digit ISBN.");
@@ -116,6 +114,12 @@ isbnInput.addEventListener("keypress", async (event) => {
         const bookData = await lookupISBN(isbn);
         populateForm(bookData);
         bookForm.style.display = "block";
+        return;
+    }
+
+    // If form is populated, treat Enter as Save
+    if (fields.title.value.trim() !== "") {
+        saveBtn.click();
     }
 });
 
