@@ -102,13 +102,8 @@ document.addEventListener("keydown", async (event) => {
     event.preventDefault();
 
     const activeElement = document.activeElement;
-    // If form is populated, treat Enter as Save
-    if (fields.title.value.trim() !== "") {
-        saveBtn.click();
-    }
-    });
 
-    // If focus is in ISBN input and title field is still empty: do lookup
+    // If focus is in ISBN input and title is still empty: do lookup
     if (activeElement === isbnInput && fields.title.value.trim() === "") {
         const isbn = isbnInput.value.trim();
         if (!isbn.match(/^\d{10,13}$/)) {
@@ -122,6 +117,11 @@ document.addEventListener("keydown", async (event) => {
         return;
     }
 
+    // If form is populated (based on title), save the entry
+    if (fields.title.value.trim() !== "") {
+        saveBtn.click();
+    }
+});
 
 
 
