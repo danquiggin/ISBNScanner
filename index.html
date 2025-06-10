@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>ISBN Book Scanner</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<script src="{{ url_for('static', filename='app.js') }}" defer></script>
-
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -44,62 +44,6 @@
 
         <button id="export">Export to Excel</button>
     </div>
-
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const isbnInput = document.getElementById("isbn");
-  const fields = ["Title", "Author", "Publisher", "Publish Date", "LCCN", "Notes"];
-
-  // Handle Enter key in ISBN input
-  isbnInput.addEventListener("keypress", function (event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      const isbn = isbnInput.value.trim();
-<!--      if (isbn.length === 13 && /^\d+$/.test(isbn)) {
-        lookupBook(isbn);
-      } else {
-        alert("Please enter a valid 13-digit ISBN.");
-      }-->
-    }
-  });
-
-  function lookupBook(isbn) {
-    fetch("/lookup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isbn: isbn }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.error) {
-        alert("Error: " + data.error);
-      } else if (data.not_found) {
-        alert("Book not found. Please enter details manually.");
-        clearFields();
-      } else {
-        populateFields(data);
-      }
-    })
-    .catch(err => alert("Network error: " + err));
-  }
-
-  function populateFields(data) {
-    fields.forEach(field => {
-      const input = document.getElementById(field.toLowerCase().replace(/ /g, "_"));
-      if (input) input.value = data[field] || "";
-    });
-  }
-
-  function clearFields() {
-    fields.forEach(field => {
-      const input = document.getElementById(field.toLowerCase().replace(/ /g, "_"));
-      if (input) input.value = "";
-    });
-  }
-});
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 </body>
 </html>
