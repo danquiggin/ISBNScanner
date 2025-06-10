@@ -100,6 +100,13 @@ function getEmptyBook() {
 isbnInput.addEventListener("keypress", async (event) => {
     if (event.key === "Enter") {
         event.preventDefault();
+
+        // If a book has already been loaded (Title field is filled), treat Enter as Save
+        if (fields.title.value.trim() !== "") {
+            saveBtn.click();
+            return;
+        }
+
         const isbn = isbnInput.value.trim();
         if (!isbn.match(/^\d{10,13}$/)) {
             alert("Please enter a 10- or 13-digit ISBN.");
@@ -111,6 +118,7 @@ isbnInput.addEventListener("keypress", async (event) => {
         bookForm.style.display = "block";
     }
 });
+
 
 lookupBtn.addEventListener("click", async () => {
     const isbn = isbnInput.value.trim();
