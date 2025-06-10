@@ -138,6 +138,7 @@ saveBtn.addEventListener("click", () => {
     isbnInput.value = "";
     clearForm();
     bookForm.style.display = "none";
+    isbnInput.focus();
 });
 window.onload = () => {
     isbnInput.focus();
